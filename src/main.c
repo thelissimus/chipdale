@@ -161,7 +161,7 @@ opcode_nnn(uint16_t opcode)
 
 /*@
   assigns \nothing;
-  ensures \result = opcode_x(opcode);
+  ensures \result == opcode_x(opcode);
 */
 static inline uint8_t
 opcode_x(uint16_t opcode)
@@ -171,7 +171,7 @@ opcode_x(uint16_t opcode)
 
 /*@
   assigns \nothing;
-  ensures \result = opcode_y(opcode);
+  ensures \result == opcode_y(opcode);
 */
 static inline uint8_t
 opcode_y(uint16_t opcode)
@@ -181,7 +181,7 @@ opcode_y(uint16_t opcode)
 
 /*@
   assigns \nothing;
-  ensures \result = opcode_kk(opcode);
+  ensures \result == opcode_kk(opcode);
 */
 static inline uint8_t
 opcode_kk(uint16_t opcode)
