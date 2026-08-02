@@ -58,6 +58,8 @@ void chip8_op_8xy0(struct Chip8 *self, uint16_t opcode);
 void chip8_op_8xy1(struct Chip8 *self, uint16_t opcode);
 void chip8_op_8xy2(struct Chip8 *self, uint16_t opcode);
 void chip8_op_8xy3(struct Chip8 *self, uint16_t opcode);
+void chip8_op_8xy4(struct Chip8 *self, uint16_t opcode);
+void chip8_op_8xy5(struct Chip8 *self, uint16_t opcode);
 
 void
 chip8_init(struct Chip8 *self)
@@ -203,6 +205,25 @@ void
 chip8_op_8xy3(struct Chip8 *self, uint16_t opcode)
 {
 	self->registers[(opcode & 0x0F00u) >> 8u] ^= self->registers[(opcode & 0x00F0u) >> 4u];
+}
+
+void
+chip8_op_8xy4(struct Chip8 *self, uint16_t opcode)
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+	uint16_t sum = self->registers[Vx] + self->registers[Vy];
+	self->registers[0xF] = sum > 255 ? 1 : 0;
+	self->registers[Vx] = sum & 0xFFu;
+}
+
+void
+chip8_op_8xy5(struct Chip8 *self, uint16_t opcode)
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+	self->registers[0xF] = self->registers[Vx] > self->registers[Vy] ? 1 : 0;
+	self->registers[Vx] -= self->registers[Vy];
 }
 
 int
