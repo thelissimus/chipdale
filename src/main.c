@@ -106,6 +106,15 @@ chip8_op_00E0(struct Chip8 *self)
 	memset(self->video, 0, sizeof self->video);
 }
 
+/*@
+  requires \valid(self);
+  requires 0 < self->sp <= 16;
+
+  assigns self->sp, self->pc;
+
+  ensures self->sp == \old(self->sp) - 1;
+  ensures self->pc == \old(self->stack[self->sp - 1]);
+*/
 void
 chip8_op_00EE(struct Chip8 *self)
 {
