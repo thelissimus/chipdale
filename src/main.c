@@ -20,7 +20,15 @@ struct Chip8 {
 
 static const size_t START_ADDRESS = 0x200;
 
+void chip8_init(struct Chip8 *self);
 bool chip8_load_rom(struct Chip8 *self, const char *filename);
+
+void
+chip8_init(struct Chip8 *self)
+{
+	*self = (struct Chip8) { 0 };
+	self->pc = START_ADDRESS;
+}
 
 bool
 chip8_load_rom(struct Chip8 *self, const char *filename)
