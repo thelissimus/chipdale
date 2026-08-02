@@ -144,6 +144,9 @@ chip8_op_00EE(struct Chip8 *self)
 
   logic integer opcode_y(integer opcode) =
     (opcode & 0x00F0) >> 4;
+
+  logic integer opcode_kk(integer opcode) =
+    opcode & 0x00FF;
 */
 
 /*@
@@ -176,6 +179,16 @@ opcode_y(uint16_t opcode)
 	return (opcode & 0x00F0) >> 4;
 }
 
+/*@
+  assigns \nothing;
+  ensures \result = opcode_kk(opcode);
+*/
+static inline uint8_t
+opcode_kk(uint16_t opcode)
+{
+	return opcode & 0x00FF;
+}
+
 void
 chip8_op_1nnn(struct Chip8 *self, uint16_t opcode)
 {
@@ -203,7 +216,7 @@ chip8_op_2nnn(struct Chip8 *self, uint16_t opcode)
 void
 chip8_op_3xkk(struct Chip8 *self, uint16_t opcode)
 {
-	if (self->registers[opcode_x(opcode)] == (opcode & 0x00FFu)) {
+	if (self->registers[opcode_x(opcode)] == opcode_kk(opcode)) {
 		self->pc += 2;
 	}
 }
@@ -211,7 +224,7 @@ chip8_op_3xkk(struct Chip8 *self, uint16_t opcode)
 void
 chip8_op_4xkk(struct Chip8 *self, uint16_t opcode)
 {
-	if (self->registers[opcode_x(opcode)] != (opcode & 0x00FFu)) {
+	if (self->registers[opcode_x(opcode)] != opcode_kk(opcode)) {
 		self->pc += 2;
 	}
 }
@@ -227,13 +240,13 @@ chip8_op_5xy0(struct Chip8 *self, uint16_t opcode)
 void
 chip8_op_6xkk(struct Chip8 *self, uint16_t opcode)
 {
-	self->registers[opcode_x(opcode)] = opcode & 0x00FFu;
+	self->registers[opcode_x(opcode)] = opcode_kk(opcode);
 }
 
 void
 chip8_op_7xkk(struct Chip8 *self, uint16_t opcode)
 {
-	self->registers[opcode_x(opcode)] += opcode & 0x00FFu;
+	self->registers[opcode_x(opcode)] += opcode_kk(opcode);
 }
 
 void
