@@ -47,6 +47,8 @@ bool chip8_load_rom(struct Chip8 *self, const char *filename) __attribute__((war
 
 void chip8_op_00E0(struct Chip8 *self);
 void chip8_op_00EE(struct Chip8 *self);
+void chip8_op_1nnn(struct Chip8 *self, uint16_t opcode);
+void chip8_op_2nnn(struct Chip8 *self, uint16_t opcode);
 
 void
 chip8_init(struct Chip8 *self)
@@ -109,6 +111,22 @@ chip8_op_00EE(struct Chip8 *self)
 {
 	self->sp -= 1;
 	self->pc = self->stack[self->sp];
+}
+
+void
+chip8_op_1nnn(struct Chip8 *self, uint16_t opcode)
+{
+	uint16_t address = opcode & 0x0FFFu;
+	self->pc = address;
+}
+
+void
+chip8_op_2nnn(struct Chip8 *self, uint16_t opcode)
+{
+	uint16_t address = opcode & 0x0FFFu;
+	self->stack[self->sp] = self->pc;
+	self->sp += 1;
+	self->pc = address;
 }
 
 int
