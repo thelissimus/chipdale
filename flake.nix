@@ -21,6 +21,7 @@
             packages = [
               pkgs.clang-tools
               pkgs.frama-c
+              pkgs.frama-c-gui
               pkgs.cbmc
             ];
           };
