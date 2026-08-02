@@ -45,6 +45,9 @@ _Static_assert(sizeof FONTSET == 16 * 5, "CHIP-8 fontset has the wrong size");
 void chip8_init(struct Chip8 *self);
 bool chip8_load_rom(struct Chip8 *self, const char *filename) __attribute__((warn_unused_result));
 
+void chip8_op_00E0(struct Chip8 *self);
+void chip8_op_00EE(struct Chip8 *self);
+
 void
 chip8_init(struct Chip8 *self)
 {
@@ -93,6 +96,19 @@ cleanup:
 	free(buffer);
 	fclose(file);
 	return success;
+}
+
+void
+chip8_op_00E0(struct Chip8 *self)
+{
+	memset(self->video, 0, sizeof self->video);
+}
+
+void
+chip8_op_00EE(struct Chip8 *self)
+{
+	self->sp -= 1;
+	self->pc = self->stack[self->sp];
 }
 
 int
