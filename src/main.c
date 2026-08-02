@@ -125,17 +125,15 @@ chip8_op_00EE(struct Chip8 *self)
 void
 chip8_op_1nnn(struct Chip8 *self, uint16_t opcode)
 {
-	uint16_t address = opcode & 0x0FFFu;
-	self->pc = address;
+	self->pc = opcode & 0x0FFFu;
 }
 
 void
 chip8_op_2nnn(struct Chip8 *self, uint16_t opcode)
 {
-	uint16_t address = opcode & 0x0FFFu;
 	self->stack[self->sp] = self->pc;
 	self->sp += 1;
-	self->pc = address;
+	self->pc = opcode & 0x0FFFu;
 }
 
 int
