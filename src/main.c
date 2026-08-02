@@ -141,6 +141,16 @@ chip8_op_1nnn(struct Chip8 *self, uint16_t opcode)
 	self->pc = opcode & 0x0FFFu;
 }
 
+/*@
+  requires \valid(self);
+  requires self->sp < 16;
+
+  assigns self->stack[self->sp], self->sp, self->pc;
+
+  ensures self->stack[\old(self->sp)] == \old(self->pc);
+  ensures self->sp == \old(self->sp) + 1;
+  ensures self->pc == (opcode & 0x0FFFu);
+*/
 void
 chip8_op_2nnn(struct Chip8 *self, uint16_t opcode)
 {
