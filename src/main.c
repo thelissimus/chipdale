@@ -43,7 +43,7 @@ static const uint8_t FONTSET[] = {
 _Static_assert(sizeof FONTSET == 16 * 5, "CHIP-8 fontset has the wrong size");
 
 void chip8_init(struct Chip8 *self);
-bool chip8_load_rom(struct Chip8 *self, const char *filename);
+bool chip8_load_rom(struct Chip8 *self, const char *filename) __attribute__((warn_unused_result));
 
 void
 chip8_init(struct Chip8 *self)
@@ -98,5 +98,9 @@ cleanup:
 int
 main(void)
 {
+	struct Chip8 vm;
+	chip8_init(&vm);
+	if (!chip8_load_rom(&vm, "")) {
+	}
 	return 0;
 }
