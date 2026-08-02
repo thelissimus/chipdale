@@ -20,6 +20,8 @@
           devShells.default = pkgs.mkShell.override { stdenv = pkgs.clangStdenv; } {
             packages = [
               pkgs.clang-tools
+              pkgs.frama-c
+              pkgs.cbmc
             ];
           };
         };
