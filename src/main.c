@@ -135,10 +135,25 @@ chip8_op_00EE(struct Chip8 *self)
 	self->pc = self->stack[self->sp];
 }
 
+/*@
+  logic integer opcode_nnn(integer opcode) =
+    opcode & 0x0FFF;
+*/
+
+/*@
+  assigns \nothing;
+  ensures \result == opcode_nnn(opcode);
+*/
+static inline uint16_t
+opcode_nnn(uint16_t opcode)
+{
+	return opcode & 0x0FFF;
+}
+
 void
 chip8_op_1nnn(struct Chip8 *self, uint16_t opcode)
 {
-	self->pc = opcode & 0x0FFFu;
+	self->pc = opcode_nnn(opcode);
 }
 
 /*@
@@ -149,14 +164,14 @@ chip8_op_1nnn(struct Chip8 *self, uint16_t opcode)
 
   ensures self->stack[\old(self->sp)] == \old(self->pc);
   ensures self->sp == \old(self->sp) + 1;
-  ensures self->pc == (opcode & 0x0FFFu);
+  ensures self->pc == opcode_nnn(opcode);
 */
 void
 chip8_op_2nnn(struct Chip8 *self, uint16_t opcode)
 {
 	self->stack[self->sp] = self->pc;
 	self->sp += 1;
-	self->pc = opcode & 0x0FFFu;
+	self->pc = opcode_nnn(opcode);
 }
 
 void
