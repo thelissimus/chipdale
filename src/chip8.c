@@ -32,6 +32,13 @@ static const uint8_t FONTSET[] = {
 
 _Static_assert(sizeof FONTSET == (size_t) 16 * 5, "CHIP-8 fontset has the wrong size");
 
+/*@
+  requires \valid(self);
+
+  ensures self->pc == 0x200;
+  ensures self->random_state == 0xDEADBEEF;
+  ensures self->random_state != 0;
+*/
 void
 chip8_init(struct Chip8 *self)
 {
