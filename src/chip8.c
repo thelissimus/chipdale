@@ -121,10 +121,10 @@ chip8_op_00EE(struct Chip8 *self)
     opcode & 0x0FFF;
 
   logic integer opcode_x(integer opcode) =
-    (opcode & 0x0F00) >> 8;
+    (opcode >> 8) & 0x000F;
 
   logic integer opcode_y(integer opcode) =
-    (opcode & 0x00F0) >> 4;
+    (opcode >> 4) & 0x000F;
 
   logic integer opcode_kk(integer opcode) =
     opcode & 0x00FF;
@@ -133,6 +133,7 @@ chip8_op_00EE(struct Chip8 *self)
 /*@
   assigns \nothing;
   ensures \result == opcode_nnn(opcode);
+  ensures \result < 0x1000;
 */
 static inline uint16_t
 opcode_nnn(uint16_t opcode)
@@ -143,26 +144,29 @@ opcode_nnn(uint16_t opcode)
 /*@
   assigns \nothing;
   ensures \result == opcode_x(opcode);
+  ensures \result < 16;
 */
 static inline uint8_t
 opcode_x(uint16_t opcode)
 {
-	return (opcode & 0x0F00) >> 8;
+	return (opcode >> 8) & 0x000F;
 }
 
 /*@
   assigns \nothing;
   ensures \result == opcode_y(opcode);
+  ensures \result < 16;
 */
 static inline uint8_t
 opcode_y(uint16_t opcode)
 {
-	return (opcode & 0x00F0) >> 4;
+	return (opcode >> 4) & 0x000F;
 }
 
 /*@
   assigns \nothing;
   ensures \result == opcode_kk(opcode);
+  ensures \result < 0x100;
 */
 static inline uint8_t
 opcode_kk(uint16_t opcode)
