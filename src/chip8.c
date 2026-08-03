@@ -49,13 +49,22 @@ chip8_init(struct Chip8 *self)
 	memcpy(&self->memory[FONTSET_START_ADDRESS], FONTSET, sizeof FONTSET);
 }
 
+/*@
+  requires \valid(self);
+  requires self->random_state != 0;
+  assigns self->random_state;
+  ensures self->random_state != 0;
+*/
 static uint8_t
 chip8_random_byte(struct Chip8 *self)
 {
 	uint32_t state = self->random_state;
 	state ^= state << 13;
+	/*@ assert state != 0; */
 	state ^= state >> 17;
+	/*@ assert state != 0; */
 	state ^= state << 5;
+	/*@ assert state != 0; */
 	self->random_state = state;
 	return (uint8_t) (state >> 24);
 }
