@@ -1,5 +1,8 @@
 bin/
 
 .frama-c/
+.frama-c-gui.local
 
 .direnv/
+
+NOTES.md
