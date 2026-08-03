@@ -3,6 +3,7 @@ bin/
 .frama-c/
 .frama-c-gui.local
 
+result
 .direnv/
 
 NOTES.md
