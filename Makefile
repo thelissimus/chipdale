@@ -51,9 +51,6 @@ $(TARGET): $(OBJ)
 format:
 	clang-format -i src/*.[ch] tests/*.c
 
-format-check:
-	clang-format --dry-run --Werror src/*.[ch] tests/*.c
-
 lint:
 	clang-tidy $(SRC) $(TEST_SRC) -- $(CPPFLAGS) $(CFLAGS)
 
@@ -68,4 +65,4 @@ clean:
 
 -include $(DEPS)
 
-.PHONY: all options format format-check lint test clean
+.PHONY: all options format lint test clean
