@@ -330,6 +330,12 @@ chip8_op_Bnnn(struct Chip8 *self, uint16_t opcode)
 	self->pc = self->registers[0] + opcode_nnn(opcode);
 }
 
+/*@
+  requires \valid(self);
+  requires self->random_state != 0;
+  assigns self->random_state, self->registers[opcode_x(opcode)];
+  ensures self->random_state != 0;
+*/
 void
 chip8_op_Cxkk(struct Chip8 *self, uint16_t opcode)
 {
