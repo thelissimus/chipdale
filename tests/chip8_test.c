@@ -1,4 +1,5 @@
 #include <criterion/criterion.h>
+#include <criterion/new/assert.h>
 
 #include "chip8.h"
 
@@ -28,7 +29,7 @@ Test(chip8, init_sets_program_counter)
 	struct Chip8 vm;
 	chip8_init(&vm);
 
-	cr_expect_eq(vm.pc, 0x200u);
+	cr_expect(eq(u16, vm.pc, 0x200u));
 }
 
 Test(chip8, init_loads_fontset)
@@ -37,4 +38,84 @@ Test(chip8, init_loads_fontset)
 	chip8_init(&vm);
 
 	cr_expect_arr_eq(&vm.memory[0x50], FONTSET, sizeof FONTSET);
+}
+
+Test(chip8, op_8xy5_equality_is_not_a_borrow)
+{
+	struct Chip8 vm = { 0 };
+	vm.registers[1] = 42;
+	vm.registers[2] = 42;
+
+	chip8_op_8xy5(&vm, 0x8125);
+
+	cr_expect(eq(u8, vm.registers[1], 0));
+	cr_expect(eq(u8, vm.registers[0xF], 1));
+}
+
+Test(chip8, op_8xy5_preserves_vf_as_x_operand)
+{
+	struct Chip8 vm = { 0 };
+	vm.registers[0xF] = 5;
+	vm.registers[2] = 4;
+
+	chip8_op_8xy5(&vm, 0x8F25);
+
+	cr_expect(eq(u8, vm.registers[0xF], 1));
+}
+
+Test(chip8, op_8xy5_preserves_vf_as_y_operand)
+{
+	struct Chip8 vm = { 0 };
+	vm.registers[1] = 5;
+	vm.registers[0xF] = 4;
+
+	chip8_op_8xy5(&vm, 0x81F5);
+
+	cr_expect(eq(u8, vm.registers[1], 1));
+	cr_expect(eq(u8, vm.registers[0xF], 1));
+}
+
+Test(chip8, op_8xy6_preserves_vf_as_x_operand)
+{
+	struct Chip8 vm = { 0 };
+	vm.registers[0xF] = 1;
+
+	chip8_op_8xy6(&vm, 0x8F06);
+
+	cr_expect(eq(u8, vm.registers[0xF], 1));
+}
+
+Test(chip8, op_8xy7_equality_is_not_a_borrow)
+{
+	struct Chip8 vm = { 0 };
+	vm.registers[1] = 42;
+	vm.registers[2] = 42;
+
+	chip8_op_8xy7(&vm, 0x8127);
+
+	cr_expect(eq(u8, vm.registers[1], 0));
+	cr_expect(eq(u8, vm.registers[0xF], 1));
+}
+
+Test(chip8, op_8xy7_preserves_vf_as_x_operand)
+{
+	struct Chip8 vm = { 0 };
+	vm.registers[0xF] = 5;
+	vm.registers[2] = 7;
+
+	chip8_op_8xy7(&vm, 0x8F27);
+
+	cr_expect(eq(u8, vm.registers[0xF], 1));
+}
+
+Test(chip8, op_8xy7_preserves_vf_as_y_operand)
+{
+	struct Chip8 vm = { 0 };
+	vm.registers[1] = 5;
+	vm.registers[0xF] = 7;
+
+	chip8_op_8xy7(&vm, 0x81F7);
+
+	cr_expect(eq(u8, vm.registers[1], 2));
+	cr_expect(eq(u8, vm.registers[0xF], 1));
 }
