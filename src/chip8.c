@@ -9,6 +9,7 @@
 
 static const size_t START_ADDRESS = 0x200;
 static const size_t FONTSET_START_ADDRESS = 0x50;
+static const uint32_t DEFAULT_RANDOM_SEED = 0xDEADBEEF;
 
 static const uint8_t FONTSET[] = {
 	0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
@@ -36,8 +37,20 @@ chip8_init(struct Chip8 *self)
 {
 	*self = (struct Chip8) { 0 };
 	self->pc = START_ADDRESS;
+	self->random_state = DEFAULT_RANDOM_SEED;
 
 	memcpy(&self->memory[FONTSET_START_ADDRESS], FONTSET, sizeof FONTSET);
+}
+
+static uint8_t
+chip8_random_byte(struct Chip8 *self)
+{
+	uint32_t state = self->random_state;
+	state ^= state << 13;
+	state ^= state >> 17;
+	state ^= state << 5;
+	self->random_state = state;
+	return (uint8_t) (state >> 24);
 }
 
 bool
@@ -299,4 +312,22 @@ chip8_op_9xy0(struct Chip8 *self, uint16_t opcode)
 	if (self->registers[Vx] != self->registers[Vy]) {
 		self->pc += 2;
 	}
+}
+
+void
+chip8_op_Annn(struct Chip8 *self, uint16_t opcode)
+{
+	self->index = opcode_nnn(opcode);
+}
+
+void
+chip8_op_Bnnn(struct Chip8 *self, uint16_t opcode)
+{
+	self->pc = self->registers[0] + opcode_nnn(opcode);
+}
+
+void
+chip8_op_Cxkk(struct Chip8 *self, uint16_t opcode)
+{
+	self->registers[opcode_x(opcode)] = chip8_random_byte(self) & opcode_kk(opcode);
 }

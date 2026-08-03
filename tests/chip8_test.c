@@ -119,3 +119,14 @@ Test(chip8, op_8xy7_preserves_vf_as_y_operand)
 	cr_expect(eq(u8, vm.registers[1], 2));
 	cr_expect(eq(u8, vm.registers[0xF], 1));
 }
+
+Test(chip8, op_Cxkk_masks_a_random_byte)
+{
+	struct Chip8 vm;
+	chip8_init(&vm);
+
+	chip8_op_Cxkk(&vm, 0xC1A5);
+
+	cr_expect(eq(u8, vm.registers[1], 0x5));
+	cr_expect(eq(u32, vm.random_state, 0x477D20B7));
+}

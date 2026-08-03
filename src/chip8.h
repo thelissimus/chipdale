@@ -12,6 +12,7 @@ struct Chip8 {
 	uint8_t sp;
 	uint8_t delay_timer;
 	uint8_t sound_timer;
+	uint32_t random_state;
 	uint8_t keypad[16];
 	uint8_t video[32][64];
 };
@@ -38,3 +39,6 @@ void chip8_op_8xy6(struct Chip8 *self, uint16_t opcode);
 void chip8_op_8xy7(struct Chip8 *self, uint16_t opcode);
 void chip8_op_8xyE(struct Chip8 *self, uint16_t opcode);
 void chip8_op_9xy0(struct Chip8 *self, uint16_t opcode);
+void chip8_op_Annn(struct Chip8 *self, uint16_t opcode);
+void chip8_op_Bnnn(struct Chip8 *self, uint16_t opcode);
+void chip8_op_Cxkk(struct Chip8 *self, uint16_t opcode);
