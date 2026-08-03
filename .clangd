@@ -1,0 +1,11 @@
+If:
+  PathMatch: .*\.[ch]
+CompileFlags:
+  Remove:
+    - -std=*
+    - -xobjective-c
+    - -xobjective-c++
+  Add:
+    - -xc
+    - -std=c17
+    - -I../src
