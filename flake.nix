@@ -2,10 +2,12 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    git-hooks.url = "github:cachix/git-hooks.nix";
+    git-hooks.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
-    inputs@{ flake-parts, ... }:
+    inputs@{ flake-parts, git-hooks, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [
         "aarch64-darwin"
@@ -13,8 +15,11 @@
         "x86_64-linux"
       ];
 
-      perSystem =
-        { pkgs, ... }:
+      imports = [
+        git-hooks.flakeModule
+      ];
+
+      perSystem = { config, lib, pkgs, ... }:
         let
           devPkgs = [
             pkgs.clang-tools
@@ -55,13 +60,22 @@
             checkPhase = ''
               runHook preCheck
               make test
-              make format-check
+              make lint
               runHook postCheck
             '';
           });
 
+          pre-commit.check.enable = true;
+          pre-commit.settings.hooks = {
+            nixpkgs-fmt.enable = true;
+            clang-format.enable = true;
+            clang-format.files = "\\.[ch]$";
+          };
+
           devShells.default = pkgs.mkShell.override { stdenv = pkgs.clangStdenv; } {
-            packages = devPkgs ++ [
+            shellHook = config.pre-commit.shellHook;
+
+            packages = devPkgs ++ config.pre-commit.settings.enabledPackages ++ [
               pkgs.frama-c
               pkgs.frama-c-gui
               pkgs.cbmc
