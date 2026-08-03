@@ -36,3 +36,5 @@ void chip8_op_8xy4(struct Chip8 *self, uint16_t opcode);
 void chip8_op_8xy5(struct Chip8 *self, uint16_t opcode);
 void chip8_op_8xy6(struct Chip8 *self, uint16_t opcode);
 void chip8_op_8xy7(struct Chip8 *self, uint16_t opcode);
+void chip8_op_8xyE(struct Chip8 *self, uint16_t opcode);
+void chip8_op_9xy0(struct Chip8 *self, uint16_t opcode);

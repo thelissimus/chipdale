@@ -281,3 +281,22 @@ chip8_op_8xy7(struct Chip8 *self, uint16_t opcode)
 	self->registers[Vx] = y - x;
 	self->registers[0xF] = y >= x ? 1 : 0;
 }
+
+void
+chip8_op_8xyE(struct Chip8 *self, uint16_t opcode)
+{
+	uint8_t Vx = opcode_x(opcode);
+	uint8_t x = self->registers[Vx];
+	self->registers[Vx] = (uint8_t) (x << 1);
+	self->registers[0xF] = (x & 0x80) >> 7;
+}
+
+void
+chip8_op_9xy0(struct Chip8 *self, uint16_t opcode)
+{
+	uint8_t Vx = opcode_x(opcode);
+	uint8_t Vy = opcode_y(opcode);
+	if (self->registers[Vx] != self->registers[Vy]) {
+		self->pc += 2;
+	}
+}
