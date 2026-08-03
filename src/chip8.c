@@ -30,7 +30,7 @@ static const uint8_t FONTSET[] = {
 	0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 };
 
-_Static_assert(sizeof FONTSET == 16 * 5, "CHIP-8 fontset has the wrong size");
+_Static_assert(sizeof FONTSET == (size_t) 16 * 5, "CHIP-8 fontset has the wrong size");
 
 void
 chip8_init(struct Chip8 *self)
