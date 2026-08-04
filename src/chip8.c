@@ -106,7 +106,7 @@ chip8_load_rom(struct Chip8 *self, const char *filename)
 
 cleanup:
 	free(buffer);
-	fclose(file);
+	(void) fclose(file);
 	return success;
 }
 
